@@ -1,6 +1,8 @@
 package TelTel;
 
+import javax.naming.Name;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -18,17 +20,19 @@ public class View {
     JLabel ㅣ3 = new JLabel("전화번호 : ");
     JLabel ㅣ4 = new JLabel("검색내용 : ");
 
+
     View() {
         GUI_init();
     }
 
     public void GUI_init() {
-        jframe.setTitle("회원관리");
+        jframe.setTitle("회원관리 프로그램");
         jframe.setBounds(50, 50, 480, 450);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
         jpanel.setLayout(null);
         jframe.add(jpanel);
+
 
         t1.setBounds(75, 25, 70, 25);
         jpanel.add(t1);
@@ -57,7 +61,7 @@ public class View {
         jpanel.add(btn1 = new JButton("입력"));
         btn1.setBounds(40, 60, 80, 30);
 
-        jpanel.add(btn2 = new JButton("출력"));
+        jpanel.add(btn2 = new JButton("전체 출력"));
         btn2.setBounds(145, 60, 80, 30);
 
         jpanel.add(btn3 = new JButton("수정"));
@@ -82,14 +86,40 @@ public class View {
                 String addr = t2.getText();
                 String tel = t3.getText();
 
-                dao.insertMember(new Model(name, addr, tel));
+                if (t1.getText().isEmpty() && t2.getText().isEmpty() && t3.getText().isEmpty()) {
+                    ta.append("\t정보를 입력해주세요");
+                }
+                else if (t1.getText().isEmpty()){
+                    ta.append("\t이름을 입력해주세요");
+                }
+                else if (t2.getText().isEmpty() && t3.getText().isEmpty()){
+                    ta.append("\t주소와 전화번호를 입력해주세요");
 
-                ta.append("입력 완료 \n");
+                }
+                else if (t1.getText().isEmpty() && t3.getText().isEmpty()){
+                    ta.append("\t이름과 전화번호를 입력해주세요");
 
-                t1.setText("");
-                t2.setText("");
-                t3.setText("");
-                t4.setText("");
+                }
+                else if (t1.getText().isEmpty() && t2.getText().isEmpty()){
+                    ta.append("\t이름과 주소를 입력해주세요");
+
+                }
+                else if (t2.getText().isEmpty()){
+                    ta.append("\t주소를 입력해주세요");
+                }
+                else if (t3.getText().isEmpty()){
+                    ta.append("\t전화번호를 입력해주세요");
+                }
+
+                else {
+                    dao.insertMember(new Model(name, addr, tel));
+                    ta.append("입력 완료 \n");
+
+                    t1.setText("");
+                    t2.setText("");
+                    t3.setText("");
+                    t4.setText("");
+                }
             }
         });
 
@@ -120,14 +150,19 @@ public class View {
                 String name = t1.getText();
                 String addr = t2.getText();
                 String tel = t3.getText();
+                if (t1.getText().isEmpty()){
+                    ta.append("\t수정할 정보를 입력해주세요");
+                }
 
-                dao.updateMember(name, tel);
-                ta.append("수정 완료 \n");
+                else {
+                    dao.updateMember(name, addr, tel);
+                    ta.append("수정 완료 \n");
 
-                t1.setText("");
-                t2.setText("");
-                t3.setText("");
-                t4.setText("");
+                    t1.setText("");
+                    t2.setText("");
+                    t3.setText("");
+                    t4.setText("");
+                }
             }
         });
 
@@ -136,15 +171,19 @@ public class View {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 ta.setText("");
-
                 String name = t1.getText();
-                dao.deleteMember(name);
-                ta.append("삭제 완료 \n");
+                if (t1.getText().isEmpty()){
+                    ta.append("\t삭제할 이름을 입력해주세요");
+                }
+                else {
+                    dao.deleteMember(name);
+                    ta.append("삭제 완료 \n");
 
-                t1.setText("");
-                t2.setText("");
-                t3.setText("");
-                t4.setText("");
+                    t1.setText("");
+                    t2.setText("");
+                    t3.setText("");
+                    t4.setText("");
+                }
             }
         });
 
@@ -158,14 +197,23 @@ public class View {
                 ArrayList<Model> arr = new ArrayList<Model>();
                 arr = dao.searchMember(content);
                 ta.append(" \n");
-
-                ta.append("\t" + "name" + "\t" + "addr" + "\t" + "tel\n");
-                ta.append("\t" + "------------------------------------------------------------\n");
-
-                for (int i = 0; i < arr.size(); i++) {
-                    ta.append("\t" + arr.get(i).getName() + " \t " + arr.get(i).getAddr() + " \t " + arr.get(i).getTel()
-                            + "\n");
+                if (t4.getText().isEmpty()) {
+                    ta.append("\t이름을 입력해주세요.");
                 }
+                else if (arr.isEmpty()){
+                    ta.append("\t목록에 없습니다.");
+                }
+
+                 else {
+                    ta.append("\t" + "name" + "\t" + "addr" + "\t" + "tel\n");
+                    ta.append("\t" + "------------------------------------------------------------\n");
+
+                    for (int i = 0; i < arr.size(); i++) {
+                        ta.append("\t" + arr.get(i).getName() + " \t " + arr.get(i).getAddr() + " \t " + arr.get(i).getTel()
+                                + "\n");
+                    }
+                }
+
 
                 t1.setText("");
                 t2.setText("");

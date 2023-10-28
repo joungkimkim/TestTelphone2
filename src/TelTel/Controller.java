@@ -3,7 +3,7 @@ package TelTel;
 import java.sql.*;
 import java.util.ArrayList;
 
-import static Tel.Telp.conn;
+
 
 public class Controller {
     Connection conn = null;
@@ -44,7 +44,7 @@ public class Controller {
         System.out.println(arr);
         try {
             st = conn.createStatement();
-            rs = st.executeQuery("select * from telph;");
+            rs = st.executeQuery("select * from telph;"); // 쿼리문 telph테이블 전체 목록 출력
             while (rs.next()) {
                 arr.add(new Model(rs.getString(1), rs.getString(2), rs.getString(3)));
             }
@@ -61,11 +61,12 @@ public class Controller {
     }
 
     // 회원수정
-    public void updateMember(String name, String tel) {
+    public void updateMember(String name, String addr,String tel) {
         try {
             st = conn.createStatement();
             int stmt = st
-                    .executeUpdate("update telph set tel = '" + tel + "' where name = '" + name + "';");
+                    .executeUpdate("update telph set 주소 = '" + addr +"',전화번호 = '" + tel + "'" +
+                            " where 이름 = '" + name + "';");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -81,16 +82,16 @@ public class Controller {
     public void deleteMember(String name) {
         try {
             st = conn.createStatement();
-            int stmt = st.executeUpdate("delete from telph where name = '" + name + "';");
+            int stmt = st.executeUpdate("delete from telph where 이름= '" + name + "';");
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        }
             try {
                 st.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
     // 회원 검색
@@ -99,19 +100,19 @@ public class Controller {
         System.out.println(arr);
         try {
             st = conn.createStatement();
-            rs = st.executeQuery("select * from telph where name like '%" + content + "%';");
+            rs = st.executeQuery("select * from telph where 이름 like '%" + content + "%';");
             while (rs.next()) {
                 arr.add(new Model(rs.getString(1), rs.getString(2), rs.getString(3)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        }
             try {
                 st.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+
         return arr;
     }
 
